@@ -1,134 +1,96 @@
-# python-interview-question-solve
-interview solve
+# Airbnb Data Analysis Challenge  
+**LeetCode-Style Pandas Problem Set (Reconstructed from Online Coding Test)**
 
-# 🏡 Airbnb Data Analysis – LeetCode-Style Challenge
+This repository contains a set of 7 Pandas-based data analysis problems inspired by a real Airbnb-themed online coding assessment. Perfect for practicing data manipulation, cleaning, grouping, merging, and datetime operations in Python with Pandas.
 
-This repository recreates an **online technical assessment** as a local, LeetCode-style data analytics challenge.  
-The focus is on **data cleaning, business logic, and analytical reasoning using Python & Pandas**.
+Ideal for interview preparation (data analyst, data scientist, backend roles involving data processing).
 
-The setup mirrors a real-world test environment where data is loaded via a shared loader module and each task is solved independently.
+## Problem Overview
 
----
+You work with two datasets:
 
-## 📌 Objective
+- **`df_listings`**: Airbnb listings  
+  Columns: `id`, `host_id`, `price` (string like "$1,200.00"), `minimum_nights`, `neighbourhood_cleansed`, `host_listings_count`, `calculated_host_listings_count`
 
-Analyze Airbnb listings and reviews data to answer business-driven questions such as:
+- **`df_reviews`**: Reviews  
+  Columns: `listing_id`, `date` (string)
 
-- Pricing behavior
-- Host professionalism impact
-- Seasonal demand patterns
-- Revenue estimation
-- Customer activity trends
+Implement 7 analytical functions as described below.
 
----
+## Project Structure
 
-## 🗂 Project Structure
-
-```text
 airbnb-analysis/
-│
 ├── src/
-│   ├── data_loader.py      # Loads listings & reviews data (API/CSV simulation)
-│   ├── task1.py            # Average listing price
-│   ├── task2.py            # Short-stay listings
-│   ├── task3.py            # Professional vs non-professional hosts
-│   ├── task4.py            # Reviews in last 365 days
-│   ├── task5.py            # Best expected revenue listing
-│   ├── task6.py            # Listings per neighbourhood
-│   └── task7.py            # Host with most listings
-│
+│   ├── data_loader.py      # Load or simulate data (replace with real CSVs if desired)
+│   ├── task1.py            # Average Price of Listings
+│   ├── task2.py            # Short-stay Listings Count
+│   ├── task3.py            # Professional vs Non-Professional Host Price Difference
+│   ├── task4.py            # Reviews in Last Year
+│   ├── task5.py            # Best Expected Revenue Listing
+│   ├── task6.py            # Listings per Neighbourhood
+│   └── task7.py            # Host with Most Listings
 ├── tests/
-│   └── test_main.py        # Unit tests (similar to online grader)
-│
-├── requirements.txt
+│   └── test_main.py        # Sample unit tests
 └── README.md
-📊 Dataset Overview
-Listings (df_listings)
-Column	Description
-id	Listing ID
-host_id	Host identifier
-price	Nightly price (string: $1,200)
-minimum_nights	Minimum stay
-neighbourhood_cleansed	Location
-calculated_host_listings_count	Number of listings per host
 
-Reviews (df_reviews)
-Column	Description
-listing_id	Listing ID
-date	Review date
+## Problems
 
-🔌 Data Loading
-All data is loaded through a shared loader to simulate an API-based system used in the online test.
+### Task 1: Average Listing Price
+Return the average price of all listings (clean `$` and `,` from the price string).
 
-python
-Copy code
-df_listings, df_reviews = load_data()
-You are not expected to modify the loader logic.
+```python
+def average_listing_price(df_listings: pd.DataFrame) -> float:
 
-🧩 Problems
-Task 1 – Average Listing Price
-Compute the average nightly price after cleaning currency symbols.
+Task 2: Count Short-Stay ListingsCount listings where minimum_nights <= 7.python
 
-Task 2 – Short-Stay Listings
-Count listings with minimum_nights ≤ 7.
+def count_short_stay_listings(df_listings: pd.DataFrame) -> int:
 
-Task 3 – Professional vs Non-Professional Hosts
-A host is professional if they manage 5 or more listings.
-Return the difference in average price:
+Task 3: Professional vs Non-Professional Host Price DifferenceProfessional host = calculated_host_listings_count >= 5.
+Return avg_price_professional - avg_price_non_professional.python
 
-nginx
-Copy code
-professional − non_professional
-Task 4 – Reviews in the Last Year
-Count reviews posted in the last 365 days.
+def prof_nonprof_host_price_diff(df_listings: pd.DataFrame, df_reviews: pd.DataFrame) -> float:
 
-Task 5 – Best Expected Revenue Listing
-Estimate expected revenue using:
+Task 4: Reviews in the Last YearCount reviews from the last 365 days (current date: January 05, 2026).python
 
-ini
-Copy code
-guests = reviews_last_year / 0.6
-expected_revenue = guests × minimum_nights × price
-Return the listing with the highest expected revenue.
+def reviews_last_year(df_reviews: pd.DataFrame) -> int:
 
-Task 6 – Listings per Neighbourhood
-Return a dictionary mapping neighbourhoods to listing counts.
+Task 5: Listing with Best Expected RevenueFilter listings with minimum_nights <= 7.
+Expected revenue = (reviews_last_year / 0.6) × minimum_nights × price
+Return the id of the listing with highest revenue (lowest ID in case of tie).python
 
-Task 7 – Host with Most Listings
-Return the host_id owning the most listings.
+def listing_with_best_expected_revenue(df_listings: pd.DataFrame, df_reviews: pd.DataFrame) -> int:
 
-🧪 Testing
-Run all tests locally (mirrors the online grader):
+Task 6: Listings per NeighbourhoodReturn a dictionary: {neighbourhood: count}.python
 
-bash
-Copy code
-pytest
-🛠 Installation
-bash
-Copy code
-pip install -r requirements.txt
-🧠 Skills Evaluated
-Data cleaning & preprocessing
+def listings_per_neighbourhood(df_listings: pd.DataFrame) -> dict:
 
-Pandas aggregations & joins
+Task 7: Host with Most ListingsReturn the host_id with the highest number of listings.python
 
-Time-series filtering
+def host_with_most_listings(df_listings: pd.DataFrame) -> int:
 
-Business metric formulation
+Setup & Running Locallybash
 
-Writing testable Python code
+# Clone the repo
+git clone https://github.com/your-username/airbnb-data-analysis.git
+cd airbnb-data-analysis
 
-Translating real-world questions into logic
+# Create virtual environment
+python -m venv venv
+source venv/bin/activate    # Windows: venv\Scripts\activate
 
-🎯 Notes
-Each task is intentionally isolated
+# Install dependencies
+pip install pandas pytest
 
-Functions must be deterministic
+Data LoadingEdit src/data_loader.py to load real data (e.g., from CSV files or Kaggle Airbnb datasets):python
 
-Focus is on clarity over cleverness
+import pandas as pd
 
-Assumptions must be handled safely
+def load_data():
+    df_listings = pd.read_csv("data/listings.csv")
+    df_reviews = pd.read_csv("data/reviews.csv")
+    return df_listings, df_reviews
 
-🚀 Author
-Gregory Kipngeno
-Data | BI | Analytics | Engineering
+Run Testsbash
+
+pytest tests/test_main.py -v
+
